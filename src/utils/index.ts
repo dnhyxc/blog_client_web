@@ -153,6 +153,15 @@ const verifyPassword = (_: any, value: string) => {
   return Promise.reject('必须包含字母、数字、特称字符');
 };
 
+// 电话号码校验
+const verifyPhone = (_: any, value: string) => {
+  const phoneRegex = /^1[3456789]\d{9}$/;
+  if (phoneRegex.test(value)) {
+    return Promise.resolve();
+  }
+  return Promise.reject('请输入有效的电话号码');
+};
+
 // 密码校验
 const verifyResetPassword = (value: string) => {
   const pwdRegex = /(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).{8,20}/;
@@ -303,6 +312,7 @@ export {
   verifyUsername,
   verifyPassword,
   verifyResetPassword,
+  verifyPhone,
   md5HashName,
   checkOs,
   drawCharater,

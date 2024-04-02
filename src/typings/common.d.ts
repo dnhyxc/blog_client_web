@@ -28,6 +28,7 @@ export interface LoginParams {
   code?: string;
   username?: string;
   password?: string;
+  phone?: string;
 }
 
 export interface UserInfoParams {
@@ -48,6 +49,7 @@ export interface UserInfoParams {
 export interface ResetPasswordParams {
   username: string;
   password: string;
+  phone: string;
 }
 
 export interface UpdateData {

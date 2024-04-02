@@ -7,7 +7,7 @@
  */
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Button, Form, Input, Checkbox } from 'antd';
+import { Button, Form, Input, Checkbox, InputNumber } from 'antd';
 import classname from 'classname';
 import useStore from '@/store';
 import { register, login, verify, resetPassword, verifyCode } from '@/service';
@@ -20,6 +20,7 @@ import {
   error,
   verifyUsername,
   verifyPassword,
+  verifyPhone,
   drawCharater,
 } from '@/utils';
 import { close } from '@/components/Render';
@@ -32,9 +33,11 @@ const Login = () => {
   const [visible, setVisible] = useState<boolean>(false);
   const [resetUname, setResetUname] = useState<string>(getCoolie('uname') as string);
   const [resetPwd, setResetPwd] = useState<string>('');
+  const [phoneNumber, setPhoneNumber] = useState<number>();
   const [verifyPwd, setVerifyPwd] = useState<string>('');
   const [showInfo, setShowInfo] = useState<boolean>(false);
   const [verifyCodeInfo, setVerifyCodeInfo] = useState<Partial<VerifyCodeParams>>({});
+  const [isRegister, setIsRegster] = useState(false);
 
   const { userInfoStore, commonStore } = useStore();
   const navigate = useNavigate();
@@ -113,10 +116,12 @@ const Login = () => {
   const onRegister = async () => {
     const values = await form.validateFields();
     const password = encrypt(values.password);
+    const phone = encrypt(values.phone);
     const { username } = values;
-    const res = normalizeResult<LoginData>(await register({ username, password }));
+    const res = normalizeResult<LoginData>(await register({ username, password, phone }));
     if (res.success) {
       success(res.message);
+      toRegister();
     } else {
       res.message && error(res.message);
     }
@@ -160,6 +165,11 @@ const Login = () => {
     }
   };
 
+  const toRegister = () => {
+    getVerifyCode();
+    setIsRegster(!isRegister);
+  };
+
   const onBackHome = () => {
     navigate('/home');
   };
@@ -169,6 +179,7 @@ const Login = () => {
   };
 
   const onBackLogin = () => {
+    getVerifyCode();
     setVisible(false);
   };
 
@@ -176,6 +187,15 @@ const Login = () => {
   const onResetPwd = async () => {
     if (!resetUname) {
       error('账号不能为空');
+      return;
+    }
+    if (!phoneNumber) {
+      error('手机号不能为空');
+      return;
+    }
+    const reg = /^1[3456789]\d{9}$/;
+    if (!reg.test(phoneNumber.toString())) {
+      error('手机号不合法');
       return;
     }
     if (!resetPwd) {
@@ -191,19 +211,16 @@ const Login = () => {
       return;
     }
     const res = normalizeResult<LoginData>(
-      await resetPassword({ username: resetUname, password: encrypt(resetPwd as string) })
+      await resetPassword({ username: resetUname, password: encrypt(resetPwd as string), phone: encrypt(phoneNumber.toString()) })
     );
     if (res.success) {
       userInfoStore.setUserInfo({
         ...res.data,
       });
       success(res.message);
-      const remember = form.getFieldValue('remember');
-      onLogin({
-        username: resetUname,
-        password: resetPwd,
-        remember,
-      });
+      onBackLogin();
+    } else {
+      error(res.message);
     }
   };
 
@@ -217,6 +234,10 @@ const Login = () => {
 
   const onChangeVerifyPwd = (e: any) => {
     setVerifyPwd(e.target.value.trim());
+  };
+
+  const onChangePhoneNumber = (value: number) => {
+    setPhoneNumber(value);
   };
 
   return (
@@ -258,21 +279,38 @@ const Login = () => {
               >
                 <Input.Password placeholder="请输入密码" size="large" />
               </Form.Item>
-              <div className={styles.codeItem}>
-                <Form.Item
-                  name="code"
-                  rules={[{ required: true, message: '请输入验证码' }]}
-                >
-                  <Input placeholder="请输入验证码" size="large" />
-                </Form.Item>
-                <canvas
-                  ref={canvasCtxRef}
-                  className={styles.codeCanvas}
-                  width={120}
-                  height={40}
-                  onClick={getVerifyCode}
-                />
-              </div>
+              {!isRegister && (
+                <div className={styles.codeItem}>
+                  <Form.Item
+                    name="code"
+                    rules={[{ required: true, message: '请输入验证码' }]}
+                  >
+                    <Input placeholder="请输入验证码" size="large" />
+                  </Form.Item>
+                  <canvas
+                    ref={canvasCtxRef}
+                    className={styles.codeCanvas}
+                    width={120}
+                    height={40}
+                    onClick={getVerifyCode}
+                  />
+                </div>
+              )}
+              {
+                isRegister && (
+                  <Form.Item
+                    name="phone"
+                    rules={[
+                      { required: true, message: '' },
+                      {
+                        validator: (_, value) => verifyPhone(_, value),
+                      },
+                    ]}
+                  >
+                    <InputNumber className={styles.phoneInp} controls={false} placeholder="请输入手机号码（号码将会被加密，无需担心泄露）" size="large" />
+                  </Form.Item>
+                )
+              }
               <Form.Item
                 name="remember"
                 valuePropName="checked"
@@ -281,26 +319,34 @@ const Login = () => {
                 <Checkbox>记住本次登录密码</Checkbox>
               </Form.Item>
               <Form.Item className={styles.actions}>
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  className={styles.login}
-                  onClick={() => onLogin()}
-                  size="large"
-                >
-                  登录
-                </Button>
-                <Button
-                  htmlType="submit"
-                  size="large"
-                  className={styles.login}
-                  onClick={onRegister}
-                >
-                  注册
-                </Button>
+                {!isRegister && (
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    className={styles.login}
+                    onClick={() => onLogin()}
+                    size="large"
+                  >
+                    登录
+                  </Button>
+                )}
+                {isRegister && (
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    size="large"
+                    className={styles.login}
+                    onClick={onRegister}
+                  >
+                    注册
+                  </Button>
+                )}
               </Form.Item>
             </Form>
             <div className={styles.forget}>
+              <Button type="link" className={styles.backBtn} onClick={toRegister}>
+                {isRegister ? '已有账号，前往登录' : '没有账号，前往注册'}
+              </Button>
               <Button type="link" className={styles.backBtn} onClick={onBackHome}>
                 返回首页
               </Button>
@@ -322,6 +368,10 @@ const Login = () => {
                   onChange={onChangeUname}
                   maxLength={20}
                 />
+              </div>
+              <div className={styles.resetInfo}>
+                <span className={styles.label}>手机号码：</span>
+                <InputNumber className={styles.phoneInp} value={phoneNumber} onChange={onChangePhoneNumber} controls={false} placeholder="请输入手机号码（号码将会被加密，无需担心泄露）" size="large" />
               </div>
               <div className={styles.resetInfo}>
                 <span className={styles.label}>新密码：</span>
@@ -353,7 +403,7 @@ const Login = () => {
                   className={styles.resetSubmitBtn}
                   onClick={onResetPwd}
                 >
-                  重置并登录
+                  重置
                 </Button>
                 <Button
                   htmlType="submit"

@@ -29,14 +29,15 @@ import DraftPopover from './DraftPopover';
 
 import styles from './index.less';
 
-interface IProps {}
+interface IProps {
+}
 
 const CreateArticle: React.FC<IProps> = () => {
   const [visible, setVisible] = useState<boolean>(false);
   const [content, setContent] = useState<string>('');
   const [draftArticleId, setDraftArticleId] = useState<string>('');
   const [deleteId, setDeleteId] = useState<string>('');
-  const [drawerVisible, setDrawerVisible] = useState(false);
+  const [drawerVisible, setDrawerVisible] = useState<boolean>(false);
 
   // 校验token是否过期
   useVerifyToken();

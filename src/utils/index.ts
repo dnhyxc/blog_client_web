@@ -9,6 +9,8 @@ import { success, error, info, warn } from './message';
 import { shareQQ, shareQZon, shareSinaWeiBo } from './share';
 import { onDowmloadElement, onPrintElement } from './print';
 
+export { compressImage } from './compress';
+
 // 格式化时间
 export const formatDate = (date: number, format = 'YYYY/MM/DD HH:mm:ss') => {
   if (!date) return;
@@ -247,11 +249,11 @@ const randomNum = (min: number, max: number) => {
 
 // canvas 绘制验证码
 const drawCharater = ({
-  canvasElement,
-  width,
-  height,
-  code,
-}: {
+                        canvasElement,
+                        width,
+                        height,
+                        code,
+                      }: {
   canvasElement: HTMLCanvasElement;
   width: number;
   height: number;

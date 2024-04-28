@@ -52,6 +52,7 @@ const ReleaseModel: React.FC<IProps> = ({
 }) => {
   const [filePath, setFilePath] = useState<string>('');
   const [tagValue, setTagValue] = useState<string>();
+  const [oldCoverImage, setOldCoverImage] = useState<string>('');
 
   const navigate = useNavigate();
   const [form] = Form.useForm();
@@ -60,6 +61,10 @@ const ReleaseModel: React.FC<IProps> = ({
   } = useStore();
   const { showAlert, toLogin, onCloseAlert, setAlertStatus } = useLoginStatus();
   const { htmlWidth } = useHtmlWidth();
+
+  useEffect(() => {
+    setOldCoverImage(initialValue?.coverImage || '');
+  }, [initialValue]);
 
   useEffect(() => {
     if (initialValue?.coverImage) {
@@ -74,7 +79,18 @@ const ReleaseModel: React.FC<IProps> = ({
     form.setFieldsValue({ abstract: initialValue?.abstract });
   }, [initialValue]);
 
+  // 删除旧封面图
+  const deleteOldCoverImage = async () => {
+    const values = await form.validateFields();
+
+    if (values?.coverImage && values?.coverImage !== oldCoverImage) {
+      // 如果还没有掉文章更新接口更新过封面图，则删除当前上传的封面图
+      await Server.removeFile({ url: values.coverImage, userId: getUserInfo?.userId });
+    }
+  };
+
   const onClose = () => {
+    deleteOldCoverImage();
     onCancel && onCancel();
   };
 
@@ -124,6 +140,7 @@ const ReleaseModel: React.FC<IProps> = ({
       createTime: values?.createTime?.valueOf() || new Date().valueOf(),
       authorId: getUserInfo?.userId,
       articleId: articleId || initialValue?.originalArticleId,
+      oldCoverImage
     };
     if (articleId || initialValue?.originalArticleId) {
       updateArticle(params);
@@ -290,6 +307,7 @@ const ReleaseModel: React.FC<IProps> = ({
                 imgStyle={styles.uploadImg}
                 setAlertStatus={setAlertStatus}
                 aspectRatio={780 / 443}
+                deleteOldCoverImage={deleteOldCoverImage}
               />
             </Form.Item>
             <Form.Item

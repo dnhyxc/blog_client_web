@@ -9,7 +9,8 @@ import type { RcFile } from 'antd/es/upload';
 import MIcons from '@/components/Icons';
 import MImage from '@/components/Image';
 import * as Service from '@/service';
-import { normalizeResult, success, error } from '@/utils';
+import useStore from '@/store';
+import { normalizeResult, success, error, compressImage, md5HashName } from '@/utils';
 import { FILETYPE } from '@/constant';
 import styles from './index.less';
 
@@ -30,35 +31,43 @@ interface IProps {
   transitionImg?: string;
   uploadNode?: ReactNode;
   listType?: UploadListType;
+  deleteOldCoverImage?: Function;
 }
 
-const UploadFile: React.FC<IProps> = ({
-  formLabel,
-  needPreview = true,
-  filePath,
-  transitionImg,
-  form,
-  setFilePath,
-  imgStyle,
-  markStyle,
-  uploadWrapStyle,
-  setAlertStatus,
-  aspectRatio = 1 / 1,
-  uploadStyle,
-  uploadNode,
-  listType = 'picture-card',
-  getUploadFilePath,
-}) => {
+const UploadFile: React.FC<IProps> = (
+  {
+    formLabel,
+    needPreview = true,
+    filePath,
+    transitionImg,
+    form,
+    setFilePath,
+    imgStyle,
+    markStyle,
+    uploadWrapStyle,
+    setAlertStatus,
+    aspectRatio = 1 / 1,
+    uploadStyle,
+    uploadNode,
+    listType = 'picture-card',
+    getUploadFilePath,
+    deleteOldCoverImage,
+  }) => {
   const [previewVisible, setPreviewVisible] = useState<boolean>(false);
   const [showCropper, setShowCropper] = useState<boolean>(false);
-  const [cropperUrl, setCropperUrl] = useState<{ url: any; filename: string }>({
+  const [cropperUrl, setCropperUrl] = useState<{ url: any; filename: string, type: string }>({
     url: '',
     filename: '',
+    type: ''
   });
 
   const cropperRef = useRef<any>(null);
 
-  const beforeUpload = (file: RcFile) => {
+  const {
+    userInfoStore: { getUserInfo },
+  } = useStore();
+
+  const beforeUpload = async (file: RcFile) => {
     const fileType = file.type;
     const isLt20M = file.size / 1024 / 1024 < 20;
     if (!FILETYPE.includes(fileType)) {
@@ -67,17 +76,34 @@ const UploadFile: React.FC<IProps> = ({
     if (!isLt20M) {
       error('请上传小于20M的图片');
     }
-
+    // 上传前先压缩图片
+    const { file: compressFile } = await compressImage({
+      file,
+      quality: 0.5, // 压缩比例
+      mimeType: cropperUrl.type,
+    });
+    // 根据文件资源生成 MD5 hash
+    const fileName = (await md5HashName(compressFile)) as string;
+    const findIndex = compressFile?.name?.lastIndexOf('.');
+    const ext = compressFile.name.slice(findIndex + 1);
+    const newFile = new File(
+      [compressFile],
+      `${fileName}_${getUserInfo.userId}.${ext}`,
+      {
+        type: compressFile.type,
+      },
+    );
     const reader = new FileReader();
     const image = new Image();
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(newFile);
     reader.onload = (e) => {
       // onload 事件在图片加载完成后立即执行。
       image.src = reader.result as any;
       image.onload = () => {
         setCropperUrl({
           url: e.target?.result,
-          filename: file.name,
+          filename: newFile.name,
+          type: newFile.type
         });
         setShowCropper(true);
       };
@@ -130,6 +156,7 @@ const UploadFile: React.FC<IProps> = ({
 
   // 删除图片
   const onDeleteFile = () => {
+    deleteOldCoverImage?.();
     setFilePath && setFilePath('');
   };
 
@@ -171,7 +198,8 @@ const UploadFile: React.FC<IProps> = ({
         listType={listType!}
         showUploadList={false}
         beforeUpload={beforeUpload}
-        customRequest={() => {}} // 覆盖upload action默认的上传行为，改为自定义上传
+        customRequest={() => {
+        }} // 覆盖upload action默认的上传行为，改为自定义上传
       >
         {uploadNode || (!filePath && <PlusOutlined />)}
       </Upload>

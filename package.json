@@ -82,6 +82,7 @@
     "@toast-ui/editor-plugin-uml": "^3.0.1",
     "antd": "^4.21.5",
     "classname": "^0.0.0",
+    "compressorjs": "^1.2.1",
     "crypto-js": "^4.1.1",
     "echarts": "^5.3.3",
     "echarts-wordcloud": "^2.1.0-beta",

@@ -84,8 +84,14 @@ const ReleaseModel: React.FC<IProps> = ({
     const values = await form.validateFields();
 
     if (values?.coverImage && values?.coverImage !== oldCoverImage) {
-      // 如果还没有掉文章更新接口更新过封面图，则删除当前上传的封面图
-      await Server.removeFile({ url: values.coverImage, userId: getUserInfo?.userId });
+      const res = normalizeResult<CreateResult>(await Server.findArticleByCoverImage({
+        coverImage: values.coverImage,
+        authorId: getUserInfo?.userId,
+      }));
+      if (res.success && !res.data && values.coverImage) {
+        // 如果还没有掉文章更新接口更新过封面图，则删除当前上传的封面图
+        await Server.removeFile({ url: values.coverImage, userId: getUserInfo?.userId });
+      }
     }
   };
 

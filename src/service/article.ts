@@ -87,6 +87,14 @@ export async function getArticleDetail(params: { id: string }) {
   return res;
 }
 
+export async function findArticleByCoverImage(params: {
+  coverImage: string;
+  authorId: string;
+}) {
+  const res = await post(API.FIND_ARTICLE_BY_COVER_IMAGE, params);
+  return res;
+}
+
 /**
  * 第一层区别方式
  *  - id: 0，formContent: ''

@@ -26,6 +26,8 @@ const UPDATE_ARTICLE = '/api/updateArticle';
 const ARTICLE_LIST = '/api/articleList';
 // 获取文章详情
 const ARTICLE_DETAIL = '/api/articleDetail';
+// 根据封面图获取文章
+const FIND_ARTICLE_BY_COVER_IMAGE = '/api/findArticleByCoverImage';
 // 获取文章详情
 const DELETE_ARTICLE = '/api/deleteArticle';
 // 文章点赞
@@ -132,6 +134,7 @@ export {
   DOWNLOAD_FILE,
   REMOVE_FILE,
   ARTICLE_DETAIL,
+  FIND_ARTICLE_BY_COVER_IMAGE,
   COMMENTS,
   GET_COMMENT_LIST,
   GIVE_LIKE,

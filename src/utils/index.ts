@@ -1,7 +1,14 @@
 import Cookies from 'js-cookie';
 import moment from 'moment';
 import SparkMD5 from 'spark-md5';
-import { SET_ITEM_CONFIG, CODE_LENGTH } from '@/constant';
+import {
+  SET_ITEM_CONFIG,
+  CODE_LENGTH,
+  EMOJI_MAP,
+  EMOJI_NAME,
+  EMOJI_HOST,
+} from '@/constant';
+
 import { encrypt, decrypt } from './crypto';
 import { normalizeResult } from './tools';
 import { storage } from './storage';
@@ -249,11 +256,11 @@ const randomNum = (min: number, max: number) => {
 
 // canvas 绘制验证码
 const drawCharater = ({
-                        canvasElement,
-                        width,
-                        height,
-                        code,
-                      }: {
+  canvasElement,
+  width,
+  height,
+  code,
+}: {
   canvasElement: HTMLCanvasElement;
   width: number;
   height: number;
@@ -294,6 +301,99 @@ const drawCharater = ({
   return code;
 };
 
+// 处理输入的换行符
+const replaceCommentContent = (content: string) => {
+  const context = content.replace(/\n/g, '<br/>');
+  return replaceEmojis(context);
+};
+
+// 表情包转换
+const replaceEmojis = (content: string) => {
+  content = content.replace(/\[[^[^\]]+]/g, (word) => {
+    const index = EMOJI_NAME.indexOf(word);
+    if (index > -1) {
+      return `<img style="vertical-align: middle;width: 32px;height: 32px" src="${
+        EMOJI_HOST + EMOJI_MAP[word]
+      }" alt="" title="${word}"/>`;
+    }
+    return word;
+  });
+  return replacePictures(content);
+};
+
+// 图片转换
+const replacePictures = (content: string) => {
+  content = content.replace(/<[^<^>]+>/g, (word) => {
+    const index = word.indexOf(',');
+    if (index > -1) {
+      const arr = word.replace('<', '').replace('>', '').split(',');
+      return `
+        <img
+          id="__COMMENT_IMG__"
+          style="border-radius: 5px;
+          width: 100%;
+          max-width: 250px;
+          height:auto;
+          display: block;
+          padding: 5px 0;
+          cursor: pointer;
+          -webkit-user-drag: none;
+          user-select: none;"
+          src="${arr[1]}"
+          title="${arr[0]}"
+          alt=""
+        />
+      `;
+    }
+    return word;
+  });
+  return wordToLink(content);
+  // return content;
+};
+
+const wordToLink = (content: string) => {
+  if (checkHref(content)) {
+    return `<a style="color: #2b7de7; cursor: pointer; word-break: break-all;">${content}</a>`;
+  }
+  return content;
+};
+
+// 校验是否是有效的链接
+const checkHref = (url: string) => {
+  const Expression =
+    /^(https?:\/\/)?(([0-9a-z.]+\.[a-z]+)|(([0-9]{1,3}\.){3}[0-9]{1,3}))(:[0-9]+)?(\/[0-9a-z%/.\-_]*)?(\?[0-9a-z=&%_-]*)?(#[0-9a-z=&%_-]*)?/gi;
+  const objExp = new RegExp(Expression);
+  return objExp.test(url);
+};
+
+// 向光标所在位置插入内容
+const insertContent = ({
+  keyword,
+  node,
+  username,
+  url,
+  emoji,
+}: {
+  keyword: string; // textarea输入内容
+  node?: HTMLTextAreaElement; // textarea输入框元素
+  username?: string; // 用户名称
+  url?: string; // 图片地址
+  emoji?: string; // 表情内容
+}) => {
+  const content = emoji || `<${username},${url}>`;
+  if (keyword.substring(0, node?.selectionStart)) {
+    return `${keyword.substring(0, node?.selectionStart)}${content}${keyword.substring(
+      node?.selectionEnd!,
+      node?.textLength
+    )}`;
+  }
+  // selectionStart 为0时，默认向最后面插入
+  return `${keyword.substring(
+    node?.selectionEnd!,
+    node?.textLength
+  )}${content}${keyword.substring(0, node?.selectionStart)}`;
+};
+
 export {
   normalizeResult,
   useCookies,
@@ -318,4 +418,10 @@ export {
   md5HashName,
   checkOs,
   drawCharater,
+  replaceCommentContent,
+  replaceEmojis,
+  replacePictures,
+  wordToLink,
+  checkHref,
+  insertContent,
 };

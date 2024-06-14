@@ -1,14 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Input } from 'antd';
+import { Button, Input, Popover } from 'antd';
 import { useParams } from 'react-router-dom';
 import classname from 'classname';
 import useStore from '@/store';
 import * as Service from '@/service';
-import { normalizeResult, error } from '@/utils';
+import { normalizeResult, error, insertContent } from '@/utils';
 import Image from '@/components/Image';
 import { HEAD_UEL } from '@/constant';
 import { sendMessage } from '@/socket';
 import { ArticleDetailParams, CommentParams, ReplayCommentResult } from '@/typings/common';
+import Emoji from '@/components/Emoji';
 import styles from './index.less';
 
 const { TextArea } = Input;
@@ -49,6 +50,7 @@ const DraftInput: React.FC<IProps> = ({
   detail,
 }) => {
   const [showIcon, setShowIcon] = useState<boolean>(false);
+  const [visible, setVisible] = useState<boolean>(false);
   const [keyword, setKeyword] = useState<string>('');
 
   const { id } = useParams();
@@ -181,6 +183,20 @@ const DraftInput: React.FC<IProps> = ({
     }
   };
 
+  const onVisibleChange = (visible: boolean) => {
+    setVisible(visible);
+  };
+
+  // 添加表情
+  const addEmoji = (key: string) => {
+    const value = insertContent({ keyword, node: (inputRef?.current as any).resizableTextArea?.textArea, emoji: key });
+    setKeyword(value);
+  };
+
+  const content = (
+    <Emoji addEmoji={addEmoji} setVisible={setVisible} />
+  );
+
   return (
     <div className={styles.DraftInput} id="DRAFT_INPUT">
       {showAvatar && (
@@ -226,16 +242,18 @@ const DraftInput: React.FC<IProps> = ({
           {(showIcon || !showAvatar) && (
             <div className={classname(styles.emojiWrap, emojiWrapH5)} id="EMOJI_WRAP">
               <div id="ICONFONT" className={styles.iconfontWrap}>
-                <span
-                  className={classname(styles.iconfont, 'iconfont icon-biaoqing-xue')}
-                  id="BIAOQING_XUE"
-                >
-                  <span id="BIAOQING_XUE" className={styles.iconText}>
-                    表情
+                <Popover visible={visible} placement="bottomLeft" content={content} title={null} overlayClassName={styles.emojiPopover} overlayInnerStyle={{ padding: 0 }} onVisibleChange={onVisibleChange}>
+                  <span
+                    className={classname(styles.iconfont, 'iconfont icon-xiaolian')}
+                    id="BIAOQING_XUE"
+                  >
+                    <span id="BIAOQING_XUE" className={styles.iconText}>
+                      表情
+                    </span>
                   </span>
-                </span>
+                </Popover>
                 <span
-                  className={classname(styles.iconfont, 'iconfont icon-charutupian')}
+                  className={classname(styles.iconfont, 'iconfont icon-tupian')}
                   id="CHARUTUPIAN"
                 >
                   <span id="CHARUTUPIAN" className={styles.iconText}>

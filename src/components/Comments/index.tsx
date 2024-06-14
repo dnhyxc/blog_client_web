@@ -1,3 +1,4 @@
+/* eslint-disable react/no-danger */
 import React, { useEffect, useMemo, useState } from 'react';
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import { Button, Modal } from 'antd';
@@ -6,7 +7,7 @@ import Image from '@/components/Image';
 import useStore from '@/store';
 import * as Service from '@/service';
 import { normalizeResult } from '@/utils/tools';
-import { formatGapTime, error } from '@/utils';
+import { formatGapTime, error, replaceCommentContent } from '@/utils';
 import { HEAD_UEL } from '@/constant';
 import MIcons from '@/components/Icons';
 import MAlert from '@/components/MAlert';
@@ -120,14 +121,14 @@ const Comments: React.FC<IProps> = ({
     }
     const params = isThreeTier
       ? {
-          commentId: comment.commentId!,
-          fromCommentId: comment.commentId!,
-          userId: getUserInfo?.userId,
-        }
+        commentId: comment.commentId!,
+        fromCommentId: comment.commentId!,
+        userId: getUserInfo?.userId,
+      }
       : {
-          commentId: comment.commentId!,
-          userId: getUserInfo?.userId,
-        };
+        commentId: comment.commentId!,
+        userId: getUserInfo?.userId,
+      };
     setLoading(true);
     const res = normalizeResult<GiveLikeResult>(await Service.giveLike(params));
     setLoading(false);
@@ -146,14 +147,14 @@ const Comments: React.FC<IProps> = ({
   const onDeleteComment = (comment: CommentParams, isThreeTier?: boolean) => {
     const params = isThreeTier
       ? {
-          commentId: comment.commentId!,
-          fromCommentId: comment.commentId!,
-          articleId: id,
-        }
+        commentId: comment.commentId!,
+        fromCommentId: comment.commentId!,
+        articleId: id,
+      }
       : {
-          commentId: comment.commentId!,
-          articleId: id,
-        };
+        commentId: comment.commentId!,
+        articleId: id,
+      };
     Modal.confirm(modalConfig(params));
   };
 
@@ -167,9 +168,9 @@ const Comments: React.FC<IProps> = ({
       className:
         htmlWidth < 960
           ? classname(
-              styles.removeCommentConfirm,
-              themeMode === 'dark' && styles.darkRemoveCommentConfirm
-            )
+            styles.removeCommentConfirm,
+            themeMode === 'dark' && styles.darkRemoveCommentConfirm
+          )
           : '',
       centered: htmlWidth < 960,
       width: htmlWidth < 960 ? '80%' : '',
@@ -241,14 +242,13 @@ const Comments: React.FC<IProps> = ({
                     <span className={styles.name}>{i.username}</span>
                     <span className={styles.date}>{formatGapTime(i.date)}</span>
                   </div>
-                  <div className={styles.desc}>{i.content}</div>
+                  <div className={styles.desc} dangerouslySetInnerHTML={{ __html: replaceCommentContent(i.content || '') }} />
                   <div className={styles.action}>
                     <div className={styles.actionContent}>
                       <div className={styles.likeAndReplay}>
                         <MIcons
-                          name={`${
-                            i.isLike ? 'icon-24gf-thumbsUp2' : 'icon-24gl-thumbsUp2'
-                          }`}
+                          name={`${i.isLike ? 'icon-24gf-thumbsUp2' : 'icon-24gl-thumbsUp2'
+                            }`}
                           text={i.likeCount! > 0 ? i.likeCount : '点赞'}
                           iconWrapClass={styles.iconWrap}
                           className={i.isLike ? styles.isLike : null}
@@ -332,7 +332,7 @@ const Comments: React.FC<IProps> = ({
                               </span>
                               <span className={styles.date}>{formatGapTime(j.date)}</span>
                             </div>
-                            {j.content && <div className={styles.desc}>{j.content}</div>}
+                            {j.content && <div className={styles.desc} dangerouslySetInnerHTML={{ __html: replaceCommentContent(j.content || '') }} />}
                             {j.formContent && (
                               <div className={styles.formContent}>
                                 {`“${j.formContent}”`}
@@ -342,11 +342,10 @@ const Comments: React.FC<IProps> = ({
                               <div className={styles.actionContent}>
                                 <div className={styles.likeAndReplay}>
                                   <MIcons
-                                    name={`${
-                                      j.isLike
-                                        ? 'icon-24gf-thumbsUp2'
-                                        : 'icon-24gl-thumbsUp2'
-                                    }`}
+                                    name={`${j.isLike
+                                      ? 'icon-24gf-thumbsUp2'
+                                      : 'icon-24gl-thumbsUp2'
+                                      }`}
                                     text={j.likeCount! > 0 ? j.likeCount : '点赞'}
                                     iconWrapClass={styles.iconWrap}
                                     className={j.isLike ? styles.isLike : null}
@@ -410,20 +409,20 @@ const Comments: React.FC<IProps> = ({
                     })}
                     {checkReplyList(i.replyList, i.commentId!).length !==
                       i.replyList.length && (
-                      <div
-                        className={styles.viewMore}
-                        onClick={() => onViewMoreReply(i.commentId!)}
-                      >
-                        <span className={styles.viewText}>
-                          查看更多（{i.replyList && i.replyList.length - 2}条）回复
-                        </span>
-                        <MIcons
-                          name="icon-xiajiantou"
-                          iconWrapClass={styles.iconWrap}
+                        <div
+                          className={styles.viewMore}
                           onClick={() => onViewMoreReply(i.commentId!)}
-                        />
-                      </div>
-                    )}
+                        >
+                          <span className={styles.viewText}>
+                            查看更多（{i.replyList && i.replyList.length - 2}条）回复
+                          </span>
+                          <MIcons
+                            name="icon-xiajiantou"
+                            iconWrapClass={styles.iconWrap}
+                            onClick={() => onViewMoreReply(i.commentId!)}
+                          />
+                        </div>
+                      )}
                   </div>
                 )}
               </div>

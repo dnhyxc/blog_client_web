@@ -9,8 +9,8 @@ import { normalizeResult, error, insertContent } from '@/utils';
 import Image from '@/components/Image';
 import { HEAD_UEL } from '@/constant';
 import { sendMessage } from '@/socket';
-import { ArticleDetailParams, CommentParams, ReplayCommentResult } from '@/typings/common';
 import Emoji from '@/components/Emoji';
+import { ArticleDetailParams, CommentParams, ReplayCommentResult } from '@/typings/common';
 import styles from './index.less';
 
 const { TextArea } = Input;

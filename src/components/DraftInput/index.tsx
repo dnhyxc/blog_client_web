@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Button, Input, Popover } from 'antd';
 import { useParams } from 'react-router-dom';
 import classname from 'classname';
+import { click } from '@testing-library/user-event/dist/click';
 import useStore from '@/store';
 import * as Service from '@/service';
 import { normalizeResult, error, insertContent } from '@/utils';
@@ -242,7 +243,7 @@ const DraftInput: React.FC<IProps> = ({
           {(showIcon || !showAvatar) && (
             <div className={classname(styles.emojiWrap, emojiWrapH5)} id="EMOJI_WRAP">
               <div id="ICONFONT" className={styles.iconfontWrap}>
-                <Popover visible={visible} placement="bottomLeft" content={content} title={null} overlayClassName={styles.emojiPopover} overlayInnerStyle={{ padding: 0 }} onVisibleChange={onVisibleChange}>
+                <Popover visible={visible} placement="bottomLeft" content={content} trigger="click" title={null} overlayClassName={styles.emojiPopover} overlayInnerStyle={{ padding: 0 }} onVisibleChange={onVisibleChange}>
                   <span
                     className={classname(styles.iconfont, 'iconfont icon-xiaolian')}
                     id="BIAOQING_XUE"

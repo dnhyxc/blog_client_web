@@ -207,7 +207,7 @@ const DraftInput: React.FC<IProps> = ({
       username: getUserInfo.username,
       url,
     });
-    setKeyword(value)
+    setKeyword(value);
     inputRef.current.focus({
       cursor: 'end',
     });

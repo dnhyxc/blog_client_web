@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Button, Input, Popover } from 'antd';
 import { useParams } from 'react-router-dom';
 import classname from 'classname';
-import { click } from '@testing-library/user-event/dist/click';
 import useStore from '@/store';
 import * as Service from '@/service';
 import { normalizeResult, error, insertContent } from '@/utils';
@@ -10,7 +9,8 @@ import Image from '@/components/Image';
 import { HEAD_UEL } from '@/constant';
 import { sendMessage } from '@/socket';
 import Emoji from '@/components/Emoji';
-import { ArticleDetailParams, CommentParams, ReplayCommentResult } from '@/typings/common';
+import UploadFile from '@/components/Upload';
+import { ArticleDetailParams, CommentParams, ReplayCommentResult, LoginData } from '@/typings/common';
 import styles from './index.less';
 
 const { TextArea } = Input;
@@ -97,7 +97,7 @@ const DraftInput: React.FC<IProps> = ({
     if (!e.target.id) {
       setShowIcon(false);
       // 隐藏回复评论的输入框
-      onHideInput && onHideInput();
+      // onHideInput && onHideInput();
     }
   };
 
@@ -198,6 +198,21 @@ const DraftInput: React.FC<IProps> = ({
     <Emoji addEmoji={addEmoji} setVisible={setVisible} />
   );
 
+  // 获取上传到的图片
+  const getUploadFilePath = async (url: string) => {
+    setShowIcon(true);
+    const value = insertContent({
+      keyword,
+      node: (inputRef?.current as any).resizableTextArea?.textArea,
+      username: getUserInfo.username,
+      url,
+    });
+    setKeyword(value)
+    inputRef.current.focus({
+      cursor: 'end',
+    });
+  };
+
   return (
     <div className={styles.DraftInput} id="DRAFT_INPUT">
       {showAvatar && (
@@ -241,7 +256,7 @@ const DraftInput: React.FC<IProps> = ({
             />
           </div>
           {(showIcon || !showAvatar) && (
-            <div className={classname(styles.emojiWrap, emojiWrapH5)} id="EMOJI_WRAP">
+            <div className={classname(styles.emojiWrap, emojiWrapH5, !showIcon && styles.hide)} id="EMOJI_WRAP" key={showIcon ? 1 : 2}>
               <div id="ICONFONT" className={styles.iconfontWrap}>
                 <Popover visible={visible} placement="bottomLeft" content={content} trigger="click" title={null} overlayClassName={styles.emojiPopover} overlayInnerStyle={{ padding: 0 }} onVisibleChange={onVisibleChange}>
                   <span
@@ -253,14 +268,25 @@ const DraftInput: React.FC<IProps> = ({
                     </span>
                   </span>
                 </Popover>
-                <span
-                  className={classname(styles.iconfont, 'iconfont icon-tupian')}
-                  id="CHARUTUPIAN"
-                >
-                  <span id="CHARUTUPIAN" className={styles.iconText}>
-                    图片
-                  </span>
-                </span>
+                <UploadFile
+                  formLabel="mainCover"
+                  uploadWrapStyle={styles.uploadWrapStyle}
+                  aspectRatio={0}
+                  needPreview={false}
+                  uploadStyle={styles.uploadStyle}
+                  listType="text"
+                  getUploadFilePath={getUploadFilePath}
+                  uploadNode={
+                    <div
+                      className={classname(styles.iconfont, 'iconfont icon-tupian')}
+                      id="CHARUTUPIAN"
+                    >
+                      <span id="CHARUTUPIAN" className={styles.iconText}>
+                        图片
+                      </span>
+                    </div>
+                  }
+                />
               </div>
               <div id="ACTION" className={themeMode === 'dark' ? styles.darkBtn : ''}>
                 {htmlWidth > 960 && (

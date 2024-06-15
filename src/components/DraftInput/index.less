@@ -62,7 +62,7 @@
       .iconfontWrap {
         display: flex;
 
-        & > span:first-child {
+        &>span:first-child {
           margin-right: 20px;
         }
       }
@@ -71,11 +71,17 @@
         display: flex;
         align-items: center;
         cursor: pointer;
+        height: 32px;
+        line-height: 32px;
 
         .iconText {
           font-size: 14px;
           margin-left: 3px;
         }
+      }
+
+      .uploadStyle {
+        height: 0;
       }
 
       #ACTION {
@@ -97,6 +103,10 @@
           }
         }
       }
+    }
+
+    .hide {
+      display: none;
     }
   }
 }

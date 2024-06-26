@@ -16,8 +16,8 @@ import styles from './index.less';
 
 interface IProps {
   formLabel?: string;
-  filePath: string | undefined;
-  form: any;
+  filePath?: string | undefined;
+  form?: any;
   // eslint-disable-next-line no-unused-vars
   setFilePath?: (url: string) => void;
   getUploadFilePath?: Function;
@@ -116,14 +116,14 @@ const UploadFile: React.FC<IProps> = (
     if (cropperRef.current) {
       cropperRef.current.getCroppedCanvas().toBlob(async (blob: string | Blob) => {
         const formData = new FormData();
-        formData.append('file', blob, cropperUrl.filename);
+        formData.append('file', blob as Blob, cropperUrl.filename);
         const res = normalizeResult<{ filePath: string }>(
           await Service.uploadFile(formData)
         );
         setShowCropper(false);
         if (res.success) {
           setFilePath && setFilePath(res?.data?.filePath);
-          form.setFieldsValue(
+          form?.setFieldsValue(
             formLabel
               ? { mainCover: res?.data?.filePath }
               : { coverImage: res?.data?.filePath }

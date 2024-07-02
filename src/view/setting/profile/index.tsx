@@ -50,9 +50,6 @@ const Profile: React.FC = () => {
 
   // 更改用户头像、封面图
   const updateUserImage = async (params: { headUrl?: string; mainCover?: string }) => {
-    const userInfo =
-      storage.ssnGetItem('userInfo') && JSON.parse(storage.ssnGetItem('userInfo')!);
-    const cloneUserInfo = JSON.parse(JSON.stringify(userInfo));
     const res = normalizeResult<LoginData>(
       await Service.updateInfo(
         {
@@ -66,14 +63,7 @@ const Profile: React.FC = () => {
       userInfoStore.setUserInfo({
         ...res.data,
       });
-      removeFile(params?.headUrl ? cloneUserInfo?.headUrl : cloneUserInfo?.mainCover);
     }
-  };
-
-  // 删除文件
-  const removeFile = async (url: string) => {
-    // 检验是否有userId，如果没有禁止发送请求
-    normalizeResult<void>(await Service.removeFile({ url, userId }));
   };
 
   // 修改用户信息

@@ -617,7 +617,19 @@ export const getSetItemConfig = (auth: string) => {
   return SET_ITEM_CONFIG;
 };
 
-export const FILETYPE = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif'];
+// 允许上传的文件类型
+export const FILETYPE = [
+  'image/jpeg',
+  'image/png',
+  'image/jpg',
+  'image/gif',
+  'image/webp',
+  'image/svg+xml',
+  'image/svg',
+];
+
+// 上传文件提示
+export const FILE_UPLOAD_MSG = '请上传 png、jpg、jpeg、gif、webp、svg 格式的图片';
 
 export const ABOUT_ME_TABS = [
   {

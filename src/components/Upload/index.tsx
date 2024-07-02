@@ -11,7 +11,7 @@ import MImage from '@/components/Image';
 import * as Service from '@/service';
 import useStore from '@/store';
 import { normalizeResult, success, error, compressImage, md5HashName } from '@/utils';
-import { FILETYPE } from '@/constant';
+import { FILETYPE, FILE_UPLOAD_MSG } from '@/constant';
 import styles from './index.less';
 
 interface IProps {
@@ -71,7 +71,7 @@ const UploadFile: React.FC<IProps> = (
     const fileType = file.type;
     const isLt20M = file.size / 1024 / 1024 < 20;
     if (!FILETYPE.includes(fileType)) {
-      error('请上传 png、jpg、jpeg、gif 格式的图片');
+      error(FILE_UPLOAD_MSG);
     }
     if (!isLt20M) {
       error('请上传小于20M的图片');

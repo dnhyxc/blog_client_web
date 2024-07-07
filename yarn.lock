@@ -3246,10 +3246,10 @@ dir-glob@^3.0.1:
   dependencies:
     path-type "^4.0.0"
 
-dnhyxc-ci@^0.0.4:
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/dnhyxc-ci/-/dnhyxc-ci-0.0.4.tgz#8843d394aed60ec258a188c3ad0c85b6d2948c82"
-  integrity sha512-Khv15kL2ZHZoMuqECTIU1Yn/d0nnPTJ1OUfc6VFrRhTo0qyqaXxWQ7HBQB87Hy8CwiUtNTggnCqQcnKccxmB6A==
+dnhyxc-ci@^0.0.8:
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/dnhyxc-ci/-/dnhyxc-ci-0.0.8.tgz#35ce8f3221173f28e4fc6027fe7182db7b4ea9fc"
+  integrity sha512-GtcNOxFok5aomytxLWiWpErz/x8q7n2C9NYesQ49bNCnVgmpul9s08xUGGF8DguidBi+m4wKoBh9WSRaT9roFw==
   dependencies:
     archiver "^7.0.1"
     axios "^1.6.8"

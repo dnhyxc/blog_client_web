@@ -77,6 +77,13 @@ const RecommendArticle: React.FC<IProps> = ({ scrollRef, themeMode, htmlWidth = 
             </div>
           ))}
       </div>
+      {siderVisible && (
+        <div className={styles.ipcWrap}>
+          <a href="https://beian.miit.gov.cn/" target="_blank" rel="noreferrer">
+            浙ICP备：2024111222号-1
+          </a>
+        </div>
+      )}
     </div>
   );
 };

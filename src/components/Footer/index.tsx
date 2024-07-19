@@ -28,8 +28,15 @@ const Footer: React.FC<IProps> = ({ children, themeMode }) => {
         themeMode === 'dark' && styles.dark
       )}
     >
-      <MenuList htmlWidth={htmlWidth} />
-      {children}
+      {!siderVisible && htmlWidth > 960 && (
+        <div className={styles.ipcWrap}>
+          <a href="https://beian.miit.gov.cn/" target="_blank" rel="noreferrer">
+            浙ICP备：2024111222号-1
+          </a>
+        </div>
+      )}
+      {htmlWidth <= 960 && <MenuList htmlWidth={htmlWidth} />}
+      {htmlWidth <= 960 && children}
     </div>
   );
 };

@@ -192,7 +192,7 @@ const ArticleDetail: React.FC = () => {
                 </div>
               )}
               {!draft && (
-                <div ref={commentRef}>
+                <div ref={commentRef} className={styles.commentContainer}>
                   <Comments
                     authorId={detail.authorId}
                     themeMode={themeMode}

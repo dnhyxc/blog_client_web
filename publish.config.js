@@ -8,7 +8,7 @@ module.exports = {
     // 端口号
     port: 22,
   },
-  porjectInfo: {
+  projectInfo: {
     blogClientWeb: {
       name: 'html',
       // dist 文件路径

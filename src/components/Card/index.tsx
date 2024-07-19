@@ -200,7 +200,7 @@ const Card: React.FC<IProps> = ({
           >
             {htmlWidth > 960 && (
               <div className={classname(imgWrapStyle, styles.imgWrap)}>
-                <div className={styles.text}>{i.title}</div>
+                {/* <div className={styles.text}>{i.title}</div> */}
                 <div className={classname(styles.cardImgWrap, cardImgWrapStyle)}>
                   {i?.isDelete && <div className={styles.mask}>文章已下架</div>}
                   <Image
@@ -214,7 +214,9 @@ const Card: React.FC<IProps> = ({
             )}
             <div className={styles.info}>
               <div className={styles.name}>
-                <span>{i.title}</span>
+                <div className={styles.title} title={i.title}>
+                  {i.title}
+                </div>
                 {(getUserInfo?.userId === i.authorId || getUserInfo?.auth === 1) &&
                   (customRender ? (
                     authorId === getUserInfo?.userId && renderAction(i.id, i.isDelete)

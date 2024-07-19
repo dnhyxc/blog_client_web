@@ -2,9 +2,7 @@
 
 .NewArticles {
   width: 260px;
-  padding: 10px 10px;
   border-radius: 5px;
-  background-color: @fff;
 
   .contant {
     border-radius: 5px;
@@ -14,12 +12,17 @@
       font-size: 18px;
       padding: 0 6px 10px 6px;
       background-color: @fff;
+      border-radius: 5px 5px 0 0;
     }
 
     .item {
       margin-bottom: 1px;
       padding: 5px 6px 6px 6px;
       background-color: @fff;
+
+      &:last-child {
+        border-radius: 0 0 5px 5px;
+      }
 
       &:hover {
         box-shadow: 0 0 3px @menu-hover;
@@ -64,6 +67,15 @@
     }
   }
 
+  .ipcWrap {
+    margin-top: 10px;
+
+    a {
+      color: #666;
+      font-size: 12px;
+    }
+  }
+
   .dark {
     background-color: @dark-bgc;
     color: @dark-fc;
@@ -71,7 +83,11 @@
 }
 
 .dark {
-  background-color: @dark-bgc-deep;
+  .ipcWrap {
+    a {
+      color: #ccc;
+    }
+  }
 }
 
 :global {

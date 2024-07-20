@@ -8,14 +8,12 @@ module.exports = {
     // 端口号
     port: 22,
   },
-  projectInfo: {
-    blogClientWeb: {
-      name: 'html',
-      // dist 文件路径
-      localFilePath: '/Users/dnhyxc/Documents/code/blog-client-web',
-      // 目标服务器项目文件路径
-      remoteFilePath: '/usr/local/nginx/html',
-      isServer: false
-    }
+  blogClientWeb: {
+    name: 'html',
+    // dist 文件路径
+    localFilePath: '/Users/dnhyxc/Documents/code/blog-client-web',
+    // 目标服务器项目文件路径
+    remoteFilePath: '/usr/local/nginx/html',
+    isServer: false
   }
 };

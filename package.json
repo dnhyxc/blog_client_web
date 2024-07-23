@@ -12,6 +12,7 @@
     "prepare": "husky install",
     "test": "npx eslint ./src --ext ts,tsx,js,jsx --fix",
     "publish": "dnhyxc-ci publish blogClientWeb",
+    "deploy": "rimraf dist dist.zip && webpack --config ./config/webpack.prod.config.js && dnhyxc-ci publish blogClientWeb",
     "civ": "dnhyxc-ci -v"
   },
   "keywords": [],
@@ -40,7 +41,7 @@
     "browserslist": "^4.21.4",
     "css-loader": "^6.7.1",
     "css-minimizer-webpack-plugin": "^4.0.0",
-    "dnhyxc-ci": "0.0.10",
+    "dnhyxc-ci": "0.0.18",
     "eslint": "^8.19.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-import-resolver-webpack": "^0.13.2",

@@ -65,10 +65,10 @@ export {
 };
 
 // 线上域名
-export const DOMAIN_URL = '101.43.50.15';
+export const DOMAIN_URL = 'www.dnhyxc.cn';
 
 // 表情资源路径域名
-export const EMOJI_HOST = `http://${
+export const EMOJI_HOST = `https://${
   [DOMAIN_URL, 'www.dnhyxc.cn', 'dnhyxc.cn'].includes(window.location.hostname)
     ? DOMAIN_URL
     : '127.0.0.1:9112'

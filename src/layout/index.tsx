@@ -35,7 +35,7 @@ const AppLayout = () => {
 
   useEffect(() => {
     if (storage?.ssnGetItem('token')) {
-      createWebSocket();
+      // createWebSocket();
     }
   }, [storage?.ssnGetItem('token')]);
 

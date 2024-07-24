@@ -102,7 +102,7 @@ const Multibar: React.FC<IProps> = ({ id, detail, commentRef, themeMode }) => {
       closeAlert();
       return;
     }
-    const res = normalizeResult<{ id: string; isLike: boolean }>(
+    const res = normalizeResult<{ id: string; isLike: boolean; likeCount: number }>(
       await Service.likeArticle({ id, userId: getUserInfo?.userId })
     );
     if (!res.success) {
@@ -114,11 +114,12 @@ const Multibar: React.FC<IProps> = ({ id, detail, commentRef, themeMode }) => {
     }
     setIsLike(res.data.isLike);
 
-    if (!res.data.isLike) {
-      setLikeCount(likeCount! - 1);
-    } else {
-      setLikeCount(likeCount! + 1);
-    }
+    setLikeCount(res.data.likeCount);
+    // if (!res.data.isLike) {
+    //   setLikeCount(likeCount! - 1);
+    // } else {
+    //   setLikeCount(likeCount! + 1);
+    // }
 
     // 给别人点赞或取消点赞之后推送websocket消息
     sendMeg(res.data.isLike ? 'LIKE_ARTICLE' : 'CANCEL_LIKE_ARTICLE');

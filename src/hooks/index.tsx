@@ -263,12 +263,12 @@ export const useLikeArticle = ({
       return;
     }
 
-    const res = normalizeResult<{ id: string; isLike: boolean }>(
+    const res = normalizeResult<{ id: string; isLike: boolean; likeCount: number }>(
       await Service.likeArticle({ id, userId: getUserInfo.userId })
     );
 
     if (res.success) {
-      const { id, isLike } = res.data;
+      const { id, isLike, likeCount } = res.data;
       if (isTimeLine) {
         const cloneArticles: TimelineResult[] = JSON.parse(JSON.stringify(articleList));
 
@@ -276,11 +276,12 @@ export const useLikeArticle = ({
           i.articles.forEach((j) => {
             if (j.id === id) {
               j.isLike = res.data.isLike;
-              if (isLike) {
-                j.likeCount += 1;
-              } else {
-                j.likeCount > 0 ? (j.likeCount -= 1) : (j.likeCount = 0);
-              }
+              j.likeCount = likeCount;
+              // if (isLike) {
+              //   j.likeCount += 1;
+              // } else {
+              //   j.likeCount > 0 ? (j.likeCount -= 1) : (j.likeCount = 0);
+              // }
             }
           });
           return i;
@@ -293,11 +294,12 @@ export const useLikeArticle = ({
         const list = cloneList.map((i) => {
           if (i.id === id) {
             i.isLike = res.data.isLike;
-            if (isLike) {
-              i.likeCount += 1;
-            } else {
-              i.likeCount > 0 ? (i.likeCount -= 1) : (i.likeCount = 0);
-            }
+            i.likeCount = likeCount;
+            // if (isLike) {
+            //   i.likeCount += 1;
+            // } else {
+            //   i.likeCount > 0 ? (i.likeCount -= 1) : (i.likeCount = 0);
+            // }
           }
           return i;
         });

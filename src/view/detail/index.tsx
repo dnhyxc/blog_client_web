@@ -46,7 +46,7 @@ const ArticleDetail: React.FC = () => {
   useEffect(() => {
     closeSocket();
     if (getUserInfo?.userId) {
-      createWebSocket();
+      // createWebSocket();
     }
   }, [getUserInfo?.userId]);
 

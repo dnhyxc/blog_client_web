@@ -37,7 +37,9 @@ export function createWebSocket() {
   if (!userInfo?.userId) return;
 
   const wsUrl = `ws://${
-    window.location.hostname === DOMAIN_URL ? DOMAIN_URL : '127.0.0.1'
+    [DOMAIN_URL, 'www.dnhyxc.cn', 'dnhyxc.cn'].includes(window.location.hostname)
+      ? DOMAIN_URL
+      : '127.0.0.1'
   }:9002/ws?id=${userInfo?.userId}`;
 
   try {

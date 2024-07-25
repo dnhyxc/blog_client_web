@@ -80,7 +80,7 @@ const RecommendArticle: React.FC<IProps> = ({ scrollRef, themeMode, htmlWidth = 
       {siderVisible && (
         <div className={styles.ipcWrap}>
           <a href="https://beian.miit.gov.cn/" target="_blank" rel="noreferrer">
-            浙ICP备：2024111222号-1
+            浙ICP备2024111222号-1
           </a>
         </div>
       )}

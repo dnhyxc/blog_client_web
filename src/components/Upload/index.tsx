@@ -34,31 +34,34 @@ interface IProps {
   deleteOldCoverImage?: Function;
 }
 
-const UploadFile: React.FC<IProps> = (
-  {
-    formLabel,
-    needPreview = true,
-    filePath,
-    transitionImg,
-    form,
-    setFilePath,
-    imgStyle,
-    markStyle,
-    uploadWrapStyle,
-    setAlertStatus,
-    aspectRatio = 1 / 1,
-    uploadStyle,
-    uploadNode,
-    listType = 'picture-card',
-    getUploadFilePath,
-    deleteOldCoverImage,
-  }) => {
+const UploadFile: React.FC<IProps> = ({
+  formLabel,
+  needPreview = true,
+  filePath,
+  transitionImg,
+  form,
+  setFilePath,
+  imgStyle,
+  markStyle,
+  uploadWrapStyle,
+  setAlertStatus,
+  aspectRatio = 1 / 1,
+  uploadStyle,
+  uploadNode,
+  listType = 'picture-card',
+  getUploadFilePath,
+  deleteOldCoverImage,
+}) => {
   const [previewVisible, setPreviewVisible] = useState<boolean>(false);
   const [showCropper, setShowCropper] = useState<boolean>(false);
-  const [cropperUrl, setCropperUrl] = useState<{ url: any; filename: string, type: string }>({
+  const [cropperUrl, setCropperUrl] = useState<{
+    url: any;
+    filename: string;
+    type: string;
+  }>({
     url: '',
     filename: '',
-    type: ''
+    type: '',
   });
 
   const cropperRef = useRef<any>(null);
@@ -76,23 +79,13 @@ const UploadFile: React.FC<IProps> = (
     if (!isLt20M) {
       error('请上传小于20M的图片');
     }
-    // 上传前先压缩图片
-    const { file: compressFile } = await compressImage({
-      file,
-      quality: 0.5, // 压缩比例
-      mimeType: cropperUrl.type,
-    });
     // 根据文件资源生成 MD5 hash
-    const fileName = (await md5HashName(compressFile)) as string;
-    const findIndex = compressFile?.name?.lastIndexOf('.');
-    const ext = compressFile.name.slice(findIndex + 1);
-    const newFile = new File(
-      [compressFile],
-      `${fileName}_${getUserInfo.userId}.${ext}`,
-      {
-        type: compressFile.type,
-      },
-    );
+    const fileName = (await md5HashName(file)) as string;
+    const findIndex = file?.name?.lastIndexOf('.');
+    const ext = file.name.slice(findIndex + 1);
+    const newFile = new File([file], `${fileName}_${getUserInfo.userId}.${ext}`, {
+      type: file.type,
+    });
     const reader = new FileReader();
     const image = new Image();
     reader.readAsDataURL(newFile);
@@ -103,7 +96,7 @@ const UploadFile: React.FC<IProps> = (
         setCropperUrl({
           url: e.target?.result,
           filename: newFile.name,
-          type: newFile.type
+          type: newFile.type,
         });
         setShowCropper(true);
       };
@@ -115,8 +108,14 @@ const UploadFile: React.FC<IProps> = (
   const onUpload = () => {
     if (cropperRef.current) {
       cropperRef.current.getCroppedCanvas().toBlob(async (blob: string | Blob) => {
+        // 上传前先压缩图片
+        const { file } = await compressImage({
+          file: blob as File,
+          quality: 0.5, // 压缩比例
+          mimeType: cropperUrl.type,
+        });
         const formData = new FormData();
-        formData.append('file', blob as Blob, cropperUrl.filename);
+        formData.append('file', file, cropperUrl.filename);
         const res = normalizeResult<{ filePath: string }>(
           await Service.uploadFile(formData)
         );
@@ -178,6 +177,7 @@ const UploadFile: React.FC<IProps> = (
             preview=".uploadCrop"
             viewMode={1} // 定义cropper的视图模式
             zoomable // 是否允许放大图像
+            type="image/jpeg"
             // movable
             guides={false} // 显示在裁剪框上方的虚线
             background={false} // 是否显示背景的马赛克
@@ -198,8 +198,7 @@ const UploadFile: React.FC<IProps> = (
         listType={listType!}
         showUploadList={false}
         beforeUpload={beforeUpload}
-        customRequest={() => {
-        }} // 覆盖upload action默认的上传行为，改为自定义上传
+        customRequest={() => {}} // 覆盖upload action默认的上传行为，改为自定义上传
       >
         {uploadNode || (!filePath && <PlusOutlined />)}
       </Upload>

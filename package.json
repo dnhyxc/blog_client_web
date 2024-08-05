@@ -13,7 +13,8 @@
     "test": "npx eslint ./src --ext ts,tsx,js,jsx --fix",
     "publish": "dnhyxc-ci publish blogClientWeb",
     "deploy": "rimraf dist dist.zip && webpack --config ./config/webpack.prod.config.js && dnhyxc-ci publish blogClientWeb",
-    "civ": "dnhyxc-ci -v"
+    "civ": "dnhyxc-ci -v",
+    "compress": "node ./compress.cjs"
   },
   "keywords": [],
   "author": "",

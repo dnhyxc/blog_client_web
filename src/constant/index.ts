@@ -22,30 +22,30 @@ import CYWL_URL from '@/assets/images/cywl.jpg';
 // import NEWBOY_COVER from '@/assets/images/newBoy.jpg';
 import SEA from '@/assets/images/sea.jpg';
 import SSM from '@/assets/images/ssm.jpg';
-import HOME_IMG from '@/assets/images/home.jpg';
-import CLASSIFY_IMG from '@/assets/images/classify.jpg';
-import TAG_IMG from '@/assets/images/tag.jpg';
-import INTERACT_IMG from '@/assets/images/interact.jpg';
-import LOGIN_IMG from '@/assets/images/login.jpg';
-import PRESONAL_IMG from '@/assets/images/presonal.jpg';
-import PROFILE_IMG from '@/assets/images/profile.jpg';
-import SEARCH_IMG from '@/assets/images/search.jpg';
-import SYSTEM_IMG from '@/assets/images/system.jpg';
-import THEME_IMG from '@/assets/images/theme.jpg';
-import TIMELINE_IMG from '@/assets/images/timeline.jpg';
-import TOOLS_IMG from '@/assets/images/tools.jpg';
-import CREATE_DRAFT_IMG from '@/assets/images/create-draft.jpg';
-import CREATE_VSCODE_IMG from '@/assets/images/create-vscode.jpg';
-import CREATE_DRAFT_EDITER_IMG from '@/assets/images/create-draft-editer.jpg';
-import CREATE_VSCODE_EDITER_IMG from '@/assets/images/create-vscode-editer.jpg';
-import COLLECT_IMG from '@/assets/images/collect.jpg';
-import AUTHOR_IMG from '@/assets/images/author.jpg';
-import ACCOUNT_IMG from '@/assets/images/account.jpg';
-import PICTURE_IMG from '@/assets/images/picture.jpg';
-import DETAIL_IMG from '@/assets/images/detail.jpg';
-import CHAT_IMG from '@/assets/images/chat.jpg';
-import ARTICLE_IMG from '@/assets/images/article.jpg';
-import TAG_LIST_IMG from '@/assets/images/tag-list.jpg';
+import HOME_IMG from '@/assets/images/home.jpeg';
+import CLASSIFY_IMG from '@/assets/images/classify.jpeg';
+import TAG_IMG from '@/assets/images/tag.jpeg';
+import INTERACT_IMG from '@/assets/images/interact.jpeg';
+import LOGIN_IMG from '@/assets/images/login.jpeg';
+import PRESONAL_IMG from '@/assets/images/personal.jpeg';
+import PROFILE_IMG from '@/assets/images/profile.jpeg';
+import SEARCH_IMG from '@/assets/images/search.jpeg';
+import SYSTEM_IMG from '@/assets/images/system.jpeg';
+import THEME_IMG from '@/assets/images/theme.jpeg';
+import TIMELINE_IMG from '@/assets/images/timeline.jpeg';
+import TOOLS_IMG from '@/assets/images/tools.jpeg';
+import CREATE_DRAFT_IMG from '@/assets/images/create-markdown.jpeg';
+import CREATE_VSCODE_IMG from '@/assets/images/create-vscode.jpeg';
+import COLLECT_IMG from '@/assets/images/collect.jpeg';
+import AUTHOR_IMG from '@/assets/images/author.jpeg';
+import ACCOUNT_IMG from '@/assets/images/account.jpeg';
+import PICTURE_IMG from '@/assets/images/picture.jpeg';
+import DETAIL_IMG from '@/assets/images/detail.jpeg';
+import CHAT_IMG from '@/assets/images/chat.jpeg';
+import ARTICLE_IMG from '@/assets/images/detail-child.jpeg';
+import TAG_LIST_IMG from '@/assets/images/tagList.jpeg';
+import RESUME_IMG from '@/assets/images/resume.jpeg';
+import DEPLOY_IMG from '@/assets/images/deploy.jpeg';
 
 export {
   SEA,
@@ -377,20 +377,12 @@ export const PREVIEW_IMGS = [
     url: TAG_LIST_IMG,
   },
   {
-    name: '发布文章-富文本',
+    name: '发布文章-Markdown',
     url: CREATE_DRAFT_IMG,
   },
   {
     name: '发布文章-VSCode',
     url: CREATE_VSCODE_IMG,
-  },
-  {
-    name: '发布文章-富文本编辑',
-    url: CREATE_DRAFT_EDITER_IMG,
-  },
-  {
-    name: '发布文章-VSCode编辑',
-    url: CREATE_VSCODE_EDITER_IMG,
   },
   {
     name: '文章详情-当前窗口打开',
@@ -399,10 +391,6 @@ export const PREVIEW_IMGS = [
   {
     name: '文章详情-子窗口打开',
     url: ARTICLE_IMG,
-  },
-  {
-    name: '时间轴',
-    url: TIMELINE_IMG,
   },
   {
     name: '关于博主',
@@ -417,12 +405,24 @@ export const PREVIEW_IMGS = [
     url: LOGIN_IMG,
   },
   {
-    name: '留言一角',
-    url: INTERACT_IMG,
-  },
-  {
     name: '实用工具',
     url: TOOLS_IMG,
+  },
+  {
+    name: '简历制作',
+    url: RESUME_IMG,
+  },
+  {
+    name: '发布系统',
+    url: DEPLOY_IMG,
+  },
+  {
+    name: '时间轴',
+    url: TIMELINE_IMG,
+  },
+  {
+    name: '留言一角',
+    url: INTERACT_IMG,
   },
   {
     name: '图片合集',
